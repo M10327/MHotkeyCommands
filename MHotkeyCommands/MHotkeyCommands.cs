@@ -93,7 +93,12 @@ namespace MHotkeyCommands
             var command = b.GetType().GetField(gesture).GetValue(b);
             if (command == null) return;
             if (!(command is List<string>)) return;
-            var cmds = command as List<string>;
+            var commands = command as List<string>;
+            List<string> cmds = new List<string>();
+            foreach (var cmd in commands)
+            {
+                cmds.Add(cmd);
+            }
             for (int i = 0; i < cmds.Count; i++)
             {
                 cmds[i] = AddDynamics(cmds[i], pl, gesture);
@@ -147,7 +152,7 @@ namespace MHotkeyCommands
                 }
                 // TODO: make the chat mode default to the player's set chat mode, but this works for now
                 byte mode = (byte)EChatMode.GLOBAL;
-                if (p.HasPermission("Binds.Chatmode"))
+                if (p.HasPermission("Binds.Dynamic.Chatmode") || p.HasPermission("Binds.Dynamic.*"))
                 {
                     if (cmd.Contains("{AREA}"))
                     {
