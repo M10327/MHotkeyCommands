@@ -34,6 +34,11 @@ namespace MHotkeyCommands
             UnturnedPlayerEvents.OnPlayerUpdateGesture += UnturnedPlayerEvents_OnPlayerUpdateGesture;
             U.Events.OnPlayerConnected += Events_OnPlayerConnected;
             PlayerInputListener.PlayerKeyInput += OnPlayerInput;
+            foreach (var cl in Provider.clients)
+            {
+                UnturnedPlayer p = UnturnedPlayer.FromSteamPlayer(cl);
+                AddDefaults(p);
+            }
         }
 
         private void OnPlayerInput(Player player, EPlayerKey key, bool down)
@@ -54,9 +59,15 @@ namespace MHotkeyCommands
 
         private void Events_OnPlayerConnected(UnturnedPlayer p)
         {
-            ulong id = (ulong)p.Player.channel.owner.playerID.steamID;
             var inp = p.Player.gameObject.AddComponent<PlayerInputListener>();
             inp.awake = true;
+            AddDefaults(p);
+        }
+
+        private void AddDefaults(UnturnedPlayer p)
+        {
+            if (!Configuration.Instance.ApplyDefaults) return;
+            ulong id = (ulong)p.Player.channel.owner.playerID.steamID;
             if (!Binds.data.ContainsKey(id))
             {
                 Binds.data[id] = new PlayerBinds();

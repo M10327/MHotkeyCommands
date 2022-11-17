@@ -14,11 +14,13 @@ namespace MHotkeyCommands
     {
         public bool Verbose;
         public int MaxCommandsPerBind;
+        public bool ApplyDefaults;
         public List<ConfigDefaultKeys> DefaultBinds;
         public void LoadDefaults()
         {
             Verbose = true;
             MaxCommandsPerBind = 3;
+            ApplyDefaults = false;
             DefaultBinds = new List<ConfigDefaultKeys>()
             {
                 new ConfigDefaultKeys()
