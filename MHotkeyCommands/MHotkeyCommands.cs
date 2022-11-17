@@ -46,6 +46,7 @@ namespace MHotkeyCommands
             if (key == EPlayerKey.Sprint) ExecuteGesture(player, "Sprint");
             if (key == EPlayerKey.LeanLeft) ExecuteGesture(player, "LeanLeft");
             if (key == EPlayerKey.LeanRight) ExecuteGesture(player, "LeanRight");
+            if (key == EPlayerKey.SteadyAim) ExecuteGesture(player, "SteadyAim");
         }
 
         private void Events_OnPlayerConnected(UnturnedPlayer p)

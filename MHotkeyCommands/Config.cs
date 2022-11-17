@@ -81,6 +81,7 @@ namespace MHotkeyCommands
         public List<string> PluginKey3;
         public List<string> PluginKey4;
         public List<string> PluginKey5;
+        public List<string> SteadyAim;
         // below is all taken care of by event UnturnedPlayerEvents_OnPlayerUpdateGesture
         public List<string> InventoryOpen;
         public List<string> InventoryClose;
