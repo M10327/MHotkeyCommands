@@ -30,22 +30,29 @@ namespace MHotkeyCommands
             Binds.CommitToFile();
             UnturnedPlayerEvents.OnPlayerUpdateGesture += UnturnedPlayerEvents_OnPlayerUpdateGesture;
             U.Events.OnPlayerConnected += Events_OnPlayerConnected;
-            PlayerInput.onPluginKeyTick += KeyPressed;
+            PlayerInputListener.PlayerKeyInput += OnPlayerInput;
         }
 
-        private void KeyPressed(Player player, uint simulation, byte key, bool state)
+        private void OnPlayerInput(Player player, EPlayerKey key, bool down)
         {
-            if (!state) return;
-            if (key == 0) ExecuteGesture(player, "PluginKey1");
-            if (key == 1) ExecuteGesture(player, "PluginKey2");
-            if (key == 2) ExecuteGesture(player, "PluginKey3");
-            if (key == 3) ExecuteGesture(player, "PluginKey4");
-            if (key == 4) ExecuteGesture(player, "PluginKey5");
+            if (key == EPlayerKey.HotKey1) ExecuteGesture(player, "PluginKey1");
+            if (key == EPlayerKey.HotKey2) ExecuteGesture(player, "PluginKey2");
+            if (key == EPlayerKey.HotKey3) ExecuteGesture(player, "PluginKey3");
+            if (key == EPlayerKey.HotKey4) ExecuteGesture(player, "PluginKey4");
+            if (key == EPlayerKey.HotKey5) ExecuteGesture(player, "PluginKey5");
+            if (key == EPlayerKey.Jump) ExecuteGesture(player, "Jump");
+            if (key == EPlayerKey.Crouch) ExecuteGesture(player, "Crouch");
+            if (key == EPlayerKey.Prone) ExecuteGesture(player, "Prone");
+            if (key == EPlayerKey.Sprint) ExecuteGesture(player, "Sprint");
+            if (key == EPlayerKey.LeanLeft) ExecuteGesture(player, "LeanLeft");
+            if (key == EPlayerKey.LeanRight) ExecuteGesture(player, "LeanRight");
         }
 
         private void Events_OnPlayerConnected(UnturnedPlayer p)
         {
             ulong id = (ulong)p.Player.channel.owner.playerID.steamID;
+            var inp = p.Player.gameObject.AddComponent<PlayerInputListener>();
+            inp.awake = true;
             if (!Binds.data.ContainsKey(id))
             {
                 Binds.data[id] = new PlayerBinds();
@@ -72,7 +79,6 @@ namespace MHotkeyCommands
             if (command == null) return;
             if (!(command is List<string>)) return;
             var cmds = command as List<string>;
-            CLog(string.Join(", ", cmds));
             for (int i = 0; i < cmds.Count; i++)
             {
                 cmds[i] = AddDynamics(cmds[i], pl);
@@ -88,7 +94,7 @@ namespace MHotkeyCommands
 
         public async void ExecuteCommands(UnturnedPlayer p, List<string> cmds)
         {
-            foreach (var command in cmds)
+            foreach (var command in cmds.ToArray())
             {
                 string cmd = command;
                 // TODO: make the chat mode default to the player's set chat mode, but this works for now
@@ -116,7 +122,7 @@ namespace MHotkeyCommands
             CleanupDatabase();
             Binds.CommitToFile();
             UnturnedPlayerEvents.OnPlayerUpdateGesture -= UnturnedPlayerEvents_OnPlayerUpdateGesture;
-            PlayerInput.onPluginKeyTick -= KeyPressed;
+            PlayerInputListener.PlayerKeyInput -= OnPlayerInput;
         }
 
         public void CleanupDatabase()

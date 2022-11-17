@@ -31,9 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony">
-      <HintPath>..\..\..\..\..\Melody\source\repos\Libs\0Harmony.dll</HintPath>
-    </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\..\..\..\Melody\source\repos\Libs\Assembly-CSharp.dll</HintPath>
     </Reference>
@@ -75,10 +72,8 @@
     <Compile Include="CommandHotkey.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="MHotkeyCommands.cs" />
+    <Compile Include="PlayerInputListener.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
