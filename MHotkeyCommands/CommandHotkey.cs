@@ -40,6 +40,7 @@ namespace MHotkeyCommands
                 }
             }
             var fieldNames = typeof(PlayerBinds).GetFields().Select(field => field.Name).ToList();
+            fieldNames.Remove("Settings");
             if (command.Length < 2)
             {
                 UnturnedChat.Say(caller, Syntax);
