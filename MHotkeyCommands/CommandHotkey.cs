@@ -17,7 +17,7 @@ namespace MHotkeyCommands
 
         public string Help => "Manage commands/chat messages bound to gestures";
 
-        public string Syntax => "/Hotkey <delete> <key> | <add> <key> <command or msg> | <list> <keys/bound> (key)";
+        public string Syntax => "/Hotkey <delete> <key> | <add/set> <key> <command or msg> | <list> <keys/bound> (key)";
 
         public List<string> Aliases => new List<string>();
 
@@ -88,13 +88,20 @@ namespace MHotkeyCommands
                     return;
                 }
             }
-            else if (command[0].ToLower() == "add")
+            else if (command[0].ToLower() == "add" || command[0].ToLower() == "set")
             {
                 if (command.Length < 3)
                 {
                     UnturnedChat.Say(caller, Syntax);
                     return;
                 }
+                string cmd = "";
+                for (int i = 2; i < command.Length; i++)
+                {
+                    cmd += " " + command[i];
+                }
+                if (cmd.ElementAt(0) == ' ') cmd = cmd.Remove(0, 1);
+                cmd = cmd.Replace("\'", "\"");
                 if (!fieldNames.Contains(command[1]))
                 {
                     UnturnedChat.Say(caller, $"Invalid key name! Use one of the following: {string.Join(", ", fieldNames)}");
@@ -115,12 +122,13 @@ namespace MHotkeyCommands
                     UnturnedChat.Say(caller, "You cannot add any more commands to that key!");
                     return;
                 }
-                binds.Add(command[2]);
+                if (command[0].ToLower() == "set") binds.Clear();
+                binds.Add(cmd);
                 MHotkeyCommands.Instance.Binds.data[id].GetType().GetField(command[1]).SetValue(MHotkeyCommands.Instance.Binds.data[id], binds);
-                UnturnedChat.Say(caller, $"Added the bind \'{command[2]}\' to key {command[1]}");
+                UnturnedChat.Say(caller, $"Added the bind \'{cmd}\' to key {command[1]}");
                 return;
             }
-            else if (command[0].ToLower() == "delete")
+            else if (command[0].ToLower() == "delete" || command[0].ToLower() == "remove")
             {
                 if (!fieldNames.Contains(command[1]))
                 {

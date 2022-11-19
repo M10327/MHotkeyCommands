@@ -3,7 +3,7 @@
 Unturned plugin for binding commands/messages to various keys/ingame actions.
 
 Main command: `/hotkey`
-Syntax: `/Hotkey \<delete> \<key> | \<add> \<key> \<command or msg> | \<list> \<keys/bound> (key)`
+Syntax: `/Hotkey \<delete> \<key> | \<add/set> \<key> \<command or msg> | \<list> \<keys/bound> (key)`
 
 Each key supports multiple commands/messages to be run at once. Max number of actions per bind is configurable. There is a delay between actions due to unturned limitations. 
 
