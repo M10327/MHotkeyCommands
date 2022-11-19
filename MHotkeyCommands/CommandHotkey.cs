@@ -29,6 +29,15 @@ namespace MHotkeyCommands
             if (!MHotkeyCommands.Instance.Binds.data.ContainsKey(id))
             {
                 MHotkeyCommands.Instance.Binds.data[id] = new PlayerBinds();
+                MHotkeyCommands.Instance.Binds.data[id].Settings = new BindsSettings();
+                if (caller.HasPermission("Binds.Save"))
+                {
+                    MHotkeyCommands.Instance.Binds.data[id].Settings.ShouldSave = true;
+                }
+                else
+                {
+                    MHotkeyCommands.Instance.Binds.data[id].Settings.ShouldSave = false;
+                }
             }
             var fieldNames = typeof(PlayerBinds).GetFields().Select(field => field.Name).ToList();
             if (command.Length < 2)

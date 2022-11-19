@@ -71,6 +71,15 @@ namespace MHotkeyCommands
             if (!Binds.data.ContainsKey(id))
             {
                 Binds.data[id] = new PlayerBinds();
+                Binds.data[id].Settings = new BindsSettings();
+                if (p.HasPermission("Binds.Save"))
+                {
+                    Binds.data[id].Settings.ShouldSave = true;
+                }
+                else
+                {
+                    Binds.data[id].Settings.ShouldSave = false;
+                }
                 foreach (var cmd in Configuration.Instance.DefaultBinds)
                 {
                     CLog($"{p.DisplayName} bound {string.Join(", ", cmd.Commands)} to {cmd.Key}");
@@ -90,6 +99,8 @@ namespace MHotkeyCommands
             UnturnedPlayer pl = UnturnedPlayer.FromPlayer(p);
             if (!Binds.data.ContainsKey(id)) return;
             var b = Binds.data[id];
+            if (!b.Settings.ShouldSave && pl.HasPermission("Binds.Save")) Binds.data[id].Settings.ShouldSave = true;
+            else if (b.Settings.ShouldSave && !pl.HasPermission("Binds.Save")) Binds.data[id].Settings.ShouldSave = false;
             var command = b.GetType().GetField(gesture).GetValue(b);
             if (command == null) return;
             if (!(command is List<string>)) return;
@@ -182,8 +193,7 @@ namespace MHotkeyCommands
         {
             foreach(var b in Binds.data.ToArray())
             {
-                var p = new RocketPlayer(b.Key.ToString());
-                if (p.HasPermission("Binds.Save")) continue;
+                if (b.Value.Settings.ShouldSave) continue;
                 Binds.data.Remove(b.Key);
             }
             CLog("Cleaned up database");
