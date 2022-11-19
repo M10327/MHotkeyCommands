@@ -125,7 +125,7 @@ namespace MHotkeyCommands
                 if (command[0].ToLower() == "set") binds.Clear();
                 binds.Add(cmd);
                 MHotkeyCommands.Instance.Binds.data[id].GetType().GetField(command[1]).SetValue(MHotkeyCommands.Instance.Binds.data[id], binds);
-                UnturnedChat.Say(caller, $"Added the bind \'{cmd}\' to key {command[1]}");
+                UnturnedChat.Say(caller, $"{(command[0].ToLower() == "set" ? "Set" : "Added")} the bind \'{cmd}\' to key {command[1]}");
                 return;
             }
             else if (command[0].ToLower() == "delete" || command[0].ToLower() == "remove")
