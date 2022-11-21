@@ -68,10 +68,12 @@ Add one of the following behind `Binds.Dynamic.` to give permissions for just th
 
 ### Examples
 - Kill the player you are looking at and tell them to get lost when you facepalm at them
-	- /hotkey add Facepalm "Get lost {T.Name}"
-	- /hotkey add Facepalm "/kill {T.ID}"
+	- /hotkey set Facepalm Get lost {T.Name}
+	- /hotkey add Facepalm /kill {T.ID}
 - Tell your bearing to your group when you point
-	- /hotkey add Point "{GROUP}There is a guy at {B}"
+	- /hotkey set Point {GROUP}There is a guy at {B}
+- Use a kit when you wave
+	- /hotkey set Wave /kit eaglefire
 
 ### Known Issues
 - Pickup gesture doesn't work
