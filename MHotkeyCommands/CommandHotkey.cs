@@ -46,6 +46,7 @@ namespace MHotkeyCommands
                     MHotkeyCommands.Instance.Binds.data[id].GetType().GetField(k).SetValue(MHotkeyCommands.Instance.Binds.data[id], null);
                 }
                 UnturnedChat.Say(caller, $"Removed all keybinds");
+                return;
             }
             if (command.Length < 2)
             {
@@ -68,6 +69,11 @@ namespace MHotkeyCommands
                         {
                             var bind = MHotkeyCommands.Instance.Binds.data[id].GetType().GetField(k).GetValue(MHotkeyCommands.Instance.Binds.data[id]);
                             if (bind != null) boundKeys[k] = (List<string>)bind;
+                        }
+                        if (boundKeys.Count < 1)
+                        {
+                            UnturnedChat.Say(caller, "You do not have any keys bound");
+                            return;
                         }
                         UnturnedChat.Say(caller, "You have the following keys bound:");
                         foreach(var b in boundKeys)
