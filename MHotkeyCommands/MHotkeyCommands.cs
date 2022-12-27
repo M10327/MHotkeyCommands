@@ -23,6 +23,7 @@ namespace MHotkeyCommands
     {
         public static MHotkeyCommands Instance { get; set; }
         public PlayerDB Binds;
+        public static List<string> Keys;
         protected override void Load()
         {
             Rocket.Core.Logging.Logger.Log($"{Name} {Assembly.GetName().Version} has been loaded!");
@@ -31,6 +32,9 @@ namespace MHotkeyCommands
             Binds = new PlayerDB();
             Binds.Reload();
             Binds.CommitToFile();
+            Keys = new List<string>();
+            Keys = typeof(PlayerBinds).GetFields().Select(field => field.Name).ToList();
+            Keys.Remove("Settings");
             UnturnedPlayerEvents.OnPlayerUpdateGesture += UnturnedPlayerEvents_OnPlayerUpdateGesture;
             U.Events.OnPlayerConnected += Events_OnPlayerConnected;
             PlayerInputListener.PlayerKeyInput += OnPlayerInput;

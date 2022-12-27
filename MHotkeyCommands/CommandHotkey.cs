@@ -39,8 +39,7 @@ namespace MHotkeyCommands
                     MHotkeyCommands.Instance.Binds.data[id].Settings.ShouldSave = false;
                 }
             }
-            var fieldNames = typeof(PlayerBinds).GetFields().Select(field => field.Name).ToList();
-            fieldNames.Remove("Settings");
+            
             if (command.Length < 2)
             {
                 UnturnedChat.Say(caller, Syntax);
@@ -50,23 +49,27 @@ namespace MHotkeyCommands
             {
                 if (command[1].ToLower() == "keys")
                 {
-                    UnturnedChat.Say(caller, $"Available hotkeys to bind to: {string.Join(", ", fieldNames)}");
+                    UnturnedChat.Say(caller, $"Available hotkeys to bind to: {string.Join(", ", MHotkeyCommands.Keys)}");
                     return;
                 }
                 else if (command[1].ToLower() == "bound")
                 {
                     if (command.Length < 3) // lists all bound keys since none are specified
                     {
-                        List<string> boundKeys = new List<string>();
-                        foreach (var k in fieldNames)
+                        Dictionary<string, List<string>> boundKeys = new Dictionary<string, List<string>>();
+                        foreach (var k in MHotkeyCommands.Keys)
                         {
                             var bind = MHotkeyCommands.Instance.Binds.data[id].GetType().GetField(k).GetValue(MHotkeyCommands.Instance.Binds.data[id]);
-                            if (bind != null) boundKeys.Add(k);
+                            if (bind != null) boundKeys[k] = (List<string>)bind;
                         }
-                        UnturnedChat.Say(caller, $"You have the following keys bound: {string.Join(", ", boundKeys)}");
+                        UnturnedChat.Say(caller, "You have the following keys bound:");
+                        foreach(var b in boundKeys)
+                        {
+                            UnturnedChat.Say(caller, $"{b.Key}: {string.Join(" | ", b.Value)}");
+                        }
                         return;
                     }
-                    if (fieldNames.Contains(command[2]))
+                    if (MHotkeyCommands.Keys.Contains(command[2]))
                     {
                         var myBind = MHotkeyCommands.Instance.Binds.data[id].GetType().GetField(command[2]).GetValue(MHotkeyCommands.Instance.Binds.data[id]);
                         if (myBind == null)
@@ -79,7 +82,7 @@ namespace MHotkeyCommands
                     }
                     else
                     {
-                        UnturnedChat.Say(caller, $"Invalid key name! Use one of the following: {string.Join(", ", fieldNames)}");
+                        UnturnedChat.Say(caller, $"Invalid key name! Use one of the following: {string.Join(", ", MHotkeyCommands.Keys)}");
                         return;
                     }
                 }
@@ -103,9 +106,9 @@ namespace MHotkeyCommands
                 }
                 if (cmd.ElementAt(0) == ' ') cmd = cmd.Remove(0, 1);
                 cmd = cmd.Replace("\'", "\"");
-                if (!fieldNames.Contains(command[1]))
+                if (!MHotkeyCommands.Keys.Contains(command[1]))
                 {
-                    UnturnedChat.Say(caller, $"Invalid key name! Use one of the following: {string.Join(", ", fieldNames)}");
+                    UnturnedChat.Say(caller, $"Invalid key name! Use one of the following: {string.Join(", ", MHotkeyCommands.Keys)}");
                     return;
                 }
                 List<string> binds;
@@ -131,9 +134,9 @@ namespace MHotkeyCommands
             }
             else if (command[0].ToLower() == "delete" || command[0].ToLower() == "remove")
             {
-                if (!fieldNames.Contains(command[1]))
+                if (!MHotkeyCommands.Keys.Contains(command[1]))
                 {
-                    UnturnedChat.Say(caller, $"Invalid key name! Use one of the following: {string.Join(", ", fieldNames)}");
+                    UnturnedChat.Say(caller, $"Invalid key name! Use one of the following: {string.Join(", ", MHotkeyCommands.Keys)}");
                     return;
                 }
                 MHotkeyCommands.Instance.Binds.data[id].GetType().GetField(command[1]).SetValue(MHotkeyCommands.Instance.Binds.data[id], null);
