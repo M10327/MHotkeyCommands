@@ -17,7 +17,7 @@ namespace MHotkeyCommands
 
         public string Help => "Manage commands/chat messages bound to gestures";
 
-        public string Syntax => "/Hotkey <delete> <key> | <add/set> <key> <command or msg> | <list> <keys/bound> (key)";
+        public string Syntax => "/Hotkey <delete> <key> | <add/set> <key> <command or msg> | <list> <keys/bound> (key) | /hotkey <unbindall>";
 
         public List<string> Aliases => new List<string>();
 
@@ -39,7 +39,14 @@ namespace MHotkeyCommands
                     MHotkeyCommands.Instance.Binds.data[id].Settings.ShouldSave = false;
                 }
             }
-            
+            if (command.Length == 1 && command[0].ToLower() == "unbindall")
+            {
+                foreach (var k in MHotkeyCommands.Keys)
+                {
+                    MHotkeyCommands.Instance.Binds.data[id].GetType().GetField(k).SetValue(MHotkeyCommands.Instance.Binds.data[id], null);
+                }
+                UnturnedChat.Say(caller, $"Removed all keybinds");
+            }
             if (command.Length < 2)
             {
                 UnturnedChat.Say(caller, Syntax);
