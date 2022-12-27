@@ -65,7 +65,7 @@ namespace MHotkeyCommands
                         UnturnedChat.Say(caller, "You have the following keys bound:");
                         foreach(var b in boundKeys)
                         {
-                            UnturnedChat.Say(caller, $"{b.Key}: {string.Join(" | ", b.Value)}");
+                            UnturnedChat.Say(caller, $"<color=#ff0000>{b.Key}</color>: {string.Join(" | ", b.Value)}", true);
                         }
                         return;
                     }
@@ -92,7 +92,7 @@ namespace MHotkeyCommands
                     return;
                 }
             }
-            else if (command[0].ToLower() == "add" || command[0].ToLower() == "set")
+            else if (command[0].ToLower() == "add" || command[0].ToLower() == "set" || command[0].ToLower() == "bind")
             {
                 if (command.Length < 3)
                 {
@@ -132,7 +132,7 @@ namespace MHotkeyCommands
                 UnturnedChat.Say(caller, $"{(command[0].ToLower() == "set" ? "Set" : "Added")} the bind \'{cmd}\' to key {command[1]}");
                 return;
             }
-            else if (command[0].ToLower() == "delete" || command[0].ToLower() == "remove")
+            else if (command[0].ToLower() == "delete" || command[0].ToLower() == "remove" || command[0].ToLower() == "unbind")
             {
                 if (!MHotkeyCommands.Keys.Contains(command[1]))
                 {
