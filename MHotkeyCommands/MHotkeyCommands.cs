@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualBasic;
 using Rocket.API;
 using Rocket.Core;
+using Rocket.Core.Logging;
 using Rocket.Core.Plugins;
 using Rocket.Unturned;
 using Rocket.Unturned.Chat;
@@ -12,10 +13,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UnityEngine;
+using Logger = Rocket.Core.Logging.Logger;
 
 namespace MHotkeyCommands
 {
@@ -67,8 +70,8 @@ namespace MHotkeyCommands
 
         public PlayerBinds GetOptions(ulong id)
         {
-            if (Binds.data.ContainsKey(id)) return Binds.data[id];
-            else return DefaultBind;
+            if (Binds.data.ContainsKey(id)) return new PlayerBinds(Binds.data[id]);
+            else return new PlayerBinds(DefaultBind);
         }
 
         private void UnturnedPlayerEvents_OnPlayerUpdateGesture(UnturnedPlayer player, UnturnedPlayerEvents.PlayerGesture gesture)
@@ -160,6 +163,10 @@ namespace MHotkeyCommands
 
         protected override void Unload()
         {
+            foreach (var b in DefaultBind.Keys)
+            {
+                Logger.Log($"Default: {b.Key} {string.Join(", ", b.Value)}");
+            }
             Binds.CommitToFile();
             UnturnedPlayerEvents.OnPlayerUpdateGesture -= UnturnedPlayerEvents_OnPlayerUpdateGesture;
             U.Events.OnPlayerConnected -= Events_OnPlayerConnected;

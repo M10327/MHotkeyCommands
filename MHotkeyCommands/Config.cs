@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Rocket.API;
 using Rocket.Core.Logging;
+using SDG.Framework.IO.FormattedFiles.KeyValueTables.TypeReaders.CoreTypes;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -115,6 +116,14 @@ namespace MHotkeyCommands
         public PlayerBinds()
         {
             Keys = new Dictionary<string, List<string>>();
+        }
+        public PlayerBinds(PlayerBinds copy)
+        {
+            Keys = new Dictionary<string, List<string>>();
+            foreach (var key in copy.Keys)
+            {
+                Keys[key.Key] = new List<string>(key.Value);
+            }
         }
         public Dictionary<string, List<string>> Keys {  get; set; }
     }

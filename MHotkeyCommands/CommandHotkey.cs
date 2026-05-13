@@ -28,11 +28,7 @@ namespace MHotkeyCommands
             var id = (ulong)(caller as UnturnedPlayer).CSteamID;
             if (!MHotkeyCommands.Instance.Binds.data.ContainsKey(id))
             {
-                MHotkeyCommands.Instance.Binds.data[id] = new PlayerBinds();
-                foreach (var def in MHotkeyCommands.Instance.Configuration.Instance.DefaultBinds)
-                {
-                    MHotkeyCommands.Instance.Binds.data[id].Keys[def.Key] = def.Commands;
-                }
+                MHotkeyCommands.Instance.Binds.data[id] = new PlayerBinds(MHotkeyCommands.Instance.DefaultBind);
             }
             if (command.Length == 1 && command[0].ToLower() == "unbindall")
             {
