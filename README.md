@@ -3,15 +3,13 @@
 Unturned plugin for binding commands/messages to various keys/ingame actions.
 
 Main command: `/hotkey`
-Syntax: `/Hotkey \<delete> \<key> | \<add/set> \<key> \<command or msg> | \<list> \<keys/bound> (key)`
+Syntax: `/Hotkey \<delete> \<key> | \<add/set> \<key> \<command or msg> | \<list> \<keys/bound>`
 
 Each key supports multiple commands/messages to be run at once. Max number of actions per bind is configurable. There is a delay between actions due to unturned limitations. 
 
-Saves binds between sessions for players with the `Binds.Save` permission. Players without the permission will have to rebind their keys every time the server reboots.
-
 Plugin Hotkeys 1-5 are assigned in your controls menu under "Mods/Plugins"
 
-Key names are dynamic components are case sensitive. `facepalm` will not work, you must use `Facepalm`!
+Key names are case sensitive. `facepalm` will not work, you must use `Facepalm`!
 
 ### Available Keys/actions
 - Jump
@@ -20,11 +18,11 @@ Key names are dynamic components are case sensitive. `facepalm` will not work, y
 - Sprint
 - LeanLeft
 - LeanRight
-- PluginKey1
-- PluginKey2
-- PluginKey3
-- PluginKey4
-- PluginKey5
+- CodeHotkey1
+- CodeHotkey2
+- CodeHotkey3
+- CodeHotkey4
+- CodeHotkey5
 - SteadyAim
 - InventoryOpen
 - InventoryClose
@@ -78,3 +76,4 @@ Add one of the following behind `Binds.Dynamic.` to give permissions for just th
 ### Known Issues
 - Pickup gesture doesn't work
 - All chat messages are global by default. Will fix as soon as I can figure out how to. 
+- T-Pose isnt availble.

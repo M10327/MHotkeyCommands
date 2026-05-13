@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Rocket.API;
+using Rocket.Core.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,19 +15,58 @@ namespace MHotkeyCommands
     {
         public bool Verbose;
         public int MaxCommandsPerBind;
-        public bool ApplyDefaults;
+        public List<string> AllowedKeys;
         public List<ConfigDefaultKeys> DefaultBinds;
         public void LoadDefaults()
         {
             Verbose = true;
             MaxCommandsPerBind = 3;
-            ApplyDefaults = false;
+            AllowedKeys = new List<string>()
+            {
+                "Jump",
+                "Crouch",
+                "Prone",
+                "Sprint",
+                "LeanLeft",
+                "LeanRight",
+                "CodeHotkey1",
+                "CodeHotkey2",
+                "CodeHotkey3",
+                "CodeHotkey4",
+                "CodeHotkey5",
+                "SteadyAim",
+                "InventoryOpen",
+                "InventoryClose",
+                "Pickup",
+                "PunchLeft",
+                "PunchRight",
+                "SurrenderStart",
+                "SurrenderStop",
+                "Point",
+                "Wave",
+                "Salute",
+                "Arrest_Start",
+                "Arrest_Stop",
+                "Rest_Start",
+                "Rest_Stop",
+                "Facepalm"
+            };
             DefaultBinds = new List<ConfigDefaultKeys>()
             {
                 new ConfigDefaultKeys()
                 {
-                    Key = "PunchLeft",
-                    Commands = new List<string>() { "I punched Left!", "You can too!" }
+                    Key = "CodeHotkey1",
+                    Commands = new List<string>() { "/tpa a" }
+                },
+                new ConfigDefaultKeys()
+                {
+                    Key = "CodeHotkey2",
+                    Commands = new List<string>() { "/tpa d" }
+                },
+                new ConfigDefaultKeys()
+                {
+                    Key = "CodeHotkey4",
+                    Commands = new List<string>() { "/mark" }
                 }
             };
         }
@@ -55,7 +95,7 @@ namespace MHotkeyCommands
                 data = new Dictionary<ulong, PlayerBinds>();
                 DataStorage.Save(data);
             }
-            MHotkeyCommands.Instance.CLog("Reloaded the binds database");
+            Logger.Log("Reloaded the binds database");
         }
 
         public void Save(Dictionary<ulong, PlayerBinds> dict)
@@ -65,41 +105,18 @@ namespace MHotkeyCommands
 
         public void CommitToFile()
         {
-            MHotkeyCommands.Instance.CLog("Saved the binds database");
+            Logger.Log("Saved the binds database");
             DataStorage.Save(data);
         }
     }
 
     public class PlayerBinds
     {
-        public List<string> Jump;
-        public List<string> Crouch;
-        public List<string> Prone;
-        public List<string> Sprint;
-        public List<string> LeanLeft;
-        public List<string> LeanRight;
-        public List<string> PluginKey1;
-        public List<string> PluginKey2;
-        public List<string> PluginKey3;
-        public List<string> PluginKey4;
-        public List<string> PluginKey5;
-        public List<string> SteadyAim;
-        // below is all taken care of by event UnturnedPlayerEvents_OnPlayerUpdateGesture
-        public List<string> InventoryOpen;
-        public List<string> InventoryClose;
-        public List<string> Pickup;
-        public List<string> PunchLeft;
-        public List<string> PunchRight;
-        public List<string> SurrenderStart;
-        public List<string> SurrenderStop;
-        public List<string> Point;
-        public List<string> Wave;
-        public List<string> Salute;
-        public List<string> Arrest_Start;
-        public List<string> Arrest_Stop;
-        public List<string> Rest_Start;
-        public List<string> Rest_Stop;
-        public List<string> Facepalm;
+        public PlayerBinds()
+        {
+            Keys = new Dictionary<string, List<string>>();
+        }
+        public Dictionary<string, List<string>> Keys {  get; set; }
     }
 
     public class DataStorage<T> where T : class

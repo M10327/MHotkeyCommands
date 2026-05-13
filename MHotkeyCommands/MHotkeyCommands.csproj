@@ -42,14 +42,17 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\Melody\source\repos\Libs\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Rocket.API">
-      <HintPath>..\..\..\..\..\Melody\source\repos\Libs\Rocket.API.dll</HintPath>
+    <Reference Include="Rocket.API, Version=4.9.3.5, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Unturned\Extras\Rocket.Unturned\Rocket.API.dll</HintPath>
     </Reference>
-    <Reference Include="Rocket.Core">
-      <HintPath>..\..\..\..\..\Melody\source\repos\Libs\Rocket.Core.dll</HintPath>
+    <Reference Include="Rocket.Core, Version=4.9.3.5, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Unturned\Extras\Rocket.Unturned\Rocket.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Rocket.Unturned">
-      <HintPath>..\..\..\..\..\Melody\source\repos\Libs\Rocket.Unturned.dll</HintPath>
+    <Reference Include="Rocket.Unturned, Version=4.9.3.14, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Unturned\Extras\Rocket.Unturned\Rocket.Unturned.dll</HintPath>
     </Reference>
     <Reference Include="SDG.NetTransport">
       <HintPath>..\..\..\..\..\Melody\source\repos\Libs\SDG.NetTransport.dll</HintPath>

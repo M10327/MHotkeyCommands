@@ -28,30 +28,28 @@ namespace MHotkeyCommands
         protected override void Load()
         {
             Rocket.Core.Logging.Logger.Log($"{Name} {Assembly.GetName().Version} has been loaded!");
-            Rocket.Core.Logging.Logger.Log($"Permission for saving binds between sessions is \'Binds.Save\'");
             Instance = this;
             Binds = new PlayerDB();
             Binds.Reload();
             Binds.CommitToFile();
-            Keys = new List<string>();
-            Keys = typeof(PlayerBinds).GetFields().Select(field => field.Name).ToList();
+            Keys = Configuration.Instance.AllowedKeys;
             UnturnedPlayerEvents.OnPlayerUpdateGesture += UnturnedPlayerEvents_OnPlayerUpdateGesture;
             U.Events.OnPlayerConnected += Events_OnPlayerConnected;
             PlayerInputListener.PlayerKeyInput += OnPlayerInput;
             DefaultBind = new PlayerBinds();
             foreach (var cmd in Configuration.Instance.DefaultBinds)
             {
-                DefaultBind.GetType().GetField(cmd.Key).SetValue(DefaultBind, cmd.Commands);
+                DefaultBind.Keys[cmd.Key] = cmd.Commands;
             }
         }
 
         private void OnPlayerInput(Player player, EPlayerKey key, bool down)
         {
-            if (key == EPlayerKey.HotKey1) ExecuteGesture(player, "PluginKey1");
-            if (key == EPlayerKey.HotKey2) ExecuteGesture(player, "PluginKey2");
-            if (key == EPlayerKey.HotKey3) ExecuteGesture(player, "PluginKey3");
-            if (key == EPlayerKey.HotKey4) ExecuteGesture(player, "PluginKey4");
-            if (key == EPlayerKey.HotKey5) ExecuteGesture(player, "PluginKey5");
+            if (key == EPlayerKey.HotKey1) ExecuteGesture(player, "CodeHotkey1");
+            if (key == EPlayerKey.HotKey2) ExecuteGesture(player, "CodeHotkey2");
+            if (key == EPlayerKey.HotKey3) ExecuteGesture(player, "CodeHotkey3");
+            if (key == EPlayerKey.HotKey4) ExecuteGesture(player, "CodeHotkey4");
+            if (key == EPlayerKey.HotKey5) ExecuteGesture(player, "CodeHotkey5");
             if (key == EPlayerKey.Jump) ExecuteGesture(player, "Jump");
             if (key == EPlayerKey.Crouch) ExecuteGesture(player, "Crouch");
             if (key == EPlayerKey.Prone) ExecuteGesture(player, "Prone");
@@ -83,12 +81,9 @@ namespace MHotkeyCommands
             ulong id = (ulong)p.channel.owner.playerID.steamID;
             UnturnedPlayer pl = UnturnedPlayer.FromPlayer(p);
             var b = GetOptions(id);
-            var command = b.GetType().GetField(gesture).GetValue(b);
-            if (command == null) return;
-            if (!(command is List<string>)) return;
-            var commands = command as List<string>;
+            if (!b.Keys.ContainsKey(gesture)) return;
             List<string> cmds = new List<string>();
-            foreach (var cmd in commands)
+            foreach (var cmd in b.Keys[gesture])
             {
                 cmds.Add(cmd);
             }
@@ -169,12 +164,6 @@ namespace MHotkeyCommands
             UnturnedPlayerEvents.OnPlayerUpdateGesture -= UnturnedPlayerEvents_OnPlayerUpdateGesture;
             U.Events.OnPlayerConnected -= Events_OnPlayerConnected;
             PlayerInputListener.PlayerKeyInput -= OnPlayerInput;
-        }
-
-        public void CLog(string text)
-        {
-            if (!Configuration.Instance.Verbose) return;
-            Rocket.Core.Logging.Logger.Log(text);
         }
     }
 
