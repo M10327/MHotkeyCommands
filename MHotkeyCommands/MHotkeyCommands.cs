@@ -24,6 +24,7 @@ namespace MHotkeyCommands
         public static MHotkeyCommands Instance { get; set; }
         public PlayerDB Binds;
         public static List<string> Keys;
+        public PlayerBinds DefaultBind;
         protected override void Load()
         {
             Rocket.Core.Logging.Logger.Log($"{Name} {Assembly.GetName().Version} has been loaded!");
@@ -34,14 +35,13 @@ namespace MHotkeyCommands
             Binds.CommitToFile();
             Keys = new List<string>();
             Keys = typeof(PlayerBinds).GetFields().Select(field => field.Name).ToList();
-            Keys.Remove("Settings");
             UnturnedPlayerEvents.OnPlayerUpdateGesture += UnturnedPlayerEvents_OnPlayerUpdateGesture;
             U.Events.OnPlayerConnected += Events_OnPlayerConnected;
             PlayerInputListener.PlayerKeyInput += OnPlayerInput;
-            foreach (var cl in Provider.clients)
+            DefaultBind = new PlayerBinds();
+            foreach (var cmd in Configuration.Instance.DefaultBinds)
             {
-                UnturnedPlayer p = UnturnedPlayer.FromSteamPlayer(cl);
-                AddDefaults(p);
+                DefaultBind.GetType().GetField(cmd.Key).SetValue(DefaultBind, cmd.Commands);
             }
         }
 
@@ -65,31 +65,12 @@ namespace MHotkeyCommands
         {
             var inp = p.Player.gameObject.AddComponent<PlayerInputListener>();
             inp.awake = true;
-            AddDefaults(p);
         }
 
-        private void AddDefaults(UnturnedPlayer p)
+        public PlayerBinds GetOptions(ulong id)
         {
-            if (!Configuration.Instance.ApplyDefaults) return;
-            ulong id = (ulong)p.Player.channel.owner.playerID.steamID;
-            if (!Binds.data.ContainsKey(id))
-            {
-                Binds.data[id] = new PlayerBinds();
-                Binds.data[id].Settings = new BindsSettings();
-                if (p.HasPermission("Binds.Save"))
-                {
-                    Binds.data[id].Settings.ShouldSave = true;
-                }
-                else
-                {
-                    Binds.data[id].Settings.ShouldSave = false;
-                }
-                foreach (var cmd in Configuration.Instance.DefaultBinds)
-                {
-                    CLog($"{p.DisplayName} bound {string.Join(", ", cmd.Commands)} to {cmd.Key}");
-                    Binds.data[id].GetType().GetField(cmd.Key).SetValue(Binds.data[id], cmd.Commands);
-                }
-            }
+            if (Binds.data.ContainsKey(id)) return Binds.data[id];
+            else return DefaultBind;
         }
 
         private void UnturnedPlayerEvents_OnPlayerUpdateGesture(UnturnedPlayer player, UnturnedPlayerEvents.PlayerGesture gesture)
@@ -101,10 +82,7 @@ namespace MHotkeyCommands
         {
             ulong id = (ulong)p.channel.owner.playerID.steamID;
             UnturnedPlayer pl = UnturnedPlayer.FromPlayer(p);
-            if (!Binds.data.ContainsKey(id)) return;
-            var b = Binds.data[id];
-            if (!b.Settings.ShouldSave && pl.HasPermission("Binds.Save")) Binds.data[id].Settings.ShouldSave = true;
-            else if (b.Settings.ShouldSave && !pl.HasPermission("Binds.Save")) Binds.data[id].Settings.ShouldSave = false;
+            var b = GetOptions(id);
             var command = b.GetType().GetField(gesture).GetValue(b);
             if (command == null) return;
             if (!(command is List<string>)) return;
@@ -187,20 +165,10 @@ namespace MHotkeyCommands
 
         protected override void Unload()
         {
-            CleanupDatabase();
             Binds.CommitToFile();
             UnturnedPlayerEvents.OnPlayerUpdateGesture -= UnturnedPlayerEvents_OnPlayerUpdateGesture;
+            U.Events.OnPlayerConnected -= Events_OnPlayerConnected;
             PlayerInputListener.PlayerKeyInput -= OnPlayerInput;
-        }
-
-        public void CleanupDatabase()
-        {
-            foreach(var b in Binds.data.ToArray())
-            {
-                if (b.Value.Settings.ShouldSave) continue;
-                Binds.data.Remove(b.Key);
-            }
-            CLog("Cleaned up database");
         }
 
         public void CLog(string text)

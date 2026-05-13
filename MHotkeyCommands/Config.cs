@@ -72,7 +72,6 @@ namespace MHotkeyCommands
 
     public class PlayerBinds
     {
-        public BindsSettings Settings;
         public List<string> Jump;
         public List<string> Crouch;
         public List<string> Prone;
@@ -101,11 +100,6 @@ namespace MHotkeyCommands
         public List<string> Rest_Start;
         public List<string> Rest_Stop;
         public List<string> Facepalm;
-    }
-
-    public class BindsSettings
-    {
-        public bool ShouldSave;
     }
 
     public class DataStorage<T> where T : class
